@@ -13,6 +13,35 @@ If you are a fresh install (you ran `git clone`, not `git pull`) and there are n
 
 ---
 
+## Project Overview
+
+NanoClaw v2 is a multi-agent backend service. It deploys AI agents into isolated Docker containers and routes user messages from channels (CLI, web, IM, etc.) to the appropriate agent. Each agent group runs in its own container with dedicated SQLite session databases.
+
+### Tech Stack
+
+- **Host**: Node.js + pnpm + TypeScript
+- **Container runtime**: Bun + Docker
+- **Database**: SQLite (central `v2.db` + per-session `inbound.db`/`outbound.db`)
+- **Architecture**: Host orchestrates containers; all IO goes through SQLite (no IPC)
+
+### Prerequisites
+
+- Node.js >= 20
+- pnpm (lockfile: `pnpm-lock.yaml`)
+- Docker Desktop (for agent containers)
+
+### Quick Start
+
+```bash
+cd nanoclaw-v2
+pnpm install
+pnpm run dev          # starts the host (hot reload via tsx)
+```
+
+The host listens on `data/cli.sock` for CLI messages. Agent containers auto-spawn when messages arrive.
+
+---
+
 # NanoClaw
 
 Personal Claude assistant. See [README.md](README.md) for philosophy and setup. Architecture lives in `docs/`.
