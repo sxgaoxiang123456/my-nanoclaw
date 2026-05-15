@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": "hackernews",
+      "name": "Hacker News",
+      "type": "api",
+      "url": "https://hacker-news.firebaseio.com/v0/topstories.json",
+      "categoryHint": "tech",
+      "fetchLimit": 30
+    },
+    {
+      "id": "anthropic-blog",
+      "name": "Anthropic Blog",
+      "type": "rss",
+      "url": "https://www.anthropic.com/rss.xml",
+      "categoryHint": "ai-model",
+      "fetchLimit": 10
+    },
+    {
+      "id": "openai-blog",
+      "name": "OpenAI Blog",
+      "type": "rss",
+      "url": "https://openai.com/blog/rss.xml",
+      "categoryHint": "ai-model",
+      "fetchLimit": 10
+    },
+    {
+      "id": "qbitai",
+      "name": "量子位",
+      "type": "rss",
+      "url": "https://www.qbitai.com/feed",
+      "categoryHint": "ai-news",
+      "fetchLimit": 10
+    },
+    {
+      "id": "36kr",
+      "name": "36氪",
+      "type": "rss",
+      "url": "https://36kr.com/feed",
+      "categoryHint": "tech-news",
+      "fetchLimit": 10
+    }
+  ]
+}
