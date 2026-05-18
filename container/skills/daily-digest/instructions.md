@@ -121,7 +121,7 @@ AI 技术日报 - {日期}
 推送成功后，记录发送日志到 `sent-digests.jsonl`：
 
 ```json
-{"sentAt":"2026-05-15T09:00:00+08:00","itemCount":6,"sections":["大模型","开源工具"]}
+{"sentAt":"2026-05-15T09:00:00+08:00","itemCount":6,"sections":["大模型","开源工具"],"items":[{"title":"GPT-5 技术报告发布","summary":"OpenAI 发布了 GPT-5 的技术报告，展示了在推理能力和多模态理解上的重大提升。","url":"https://openai.com/research/gpt-5","source":"hackernews"}]}
 ```
 
 ---
@@ -416,7 +416,7 @@ cat /workspace/agent/daily-digest/data/raw.json
 推送成功后记录发送日志到 `sent-digests.jsonl`：
 
 ```json
-{"sentAt":"2026-05-15T14:30:00+08:00","itemCount":6,"sections":["大模型","开源工具"],"trigger":"manual"}
+{"sentAt":"2026-05-15T14:30:00+08:00","itemCount":6,"sections":["大模型","开源工具"],"trigger":"manual","items":[{"title":"GPT-5 技术报告发布","summary":"OpenAI 发布了 GPT-5 的技术报告，展示了在推理能力和多模态理解上的重大提升。","url":"https://openai.com/research/gpt-5","source":"hackernews"}]}
 ```
 
 注意：手动触发记录中增加 `"trigger":"manual"` 字段，以便区分定时触发和手动触发。
