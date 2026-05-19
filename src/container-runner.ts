@@ -331,6 +331,28 @@ function buildMounts(
     mounts.push(...providerContribution.mounts);
   }
 
+  // Content-gen shared data directory — mounted into all content-gen workflow
+  // agents (coordinator, researchers, writers) so they share the same data
+  // space for progress.json, research reports, and generated articles.
+  const isContentGenAgent =
+    agentGroup.folder === 'cli-with-muyu' ||
+    agentGroup.folder.includes('-cg-') ||
+    agentGroup.folder.startsWith('researcher-ai-') ||
+    agentGroup.folder.startsWith('writer-');
+  if (isContentGenAgent) {
+    const coordinatorContentGenDir = path.join(GROUPS_DIR, 'cli-with-muyu', 'content-gen', 'data');
+    if (fs.existsSync(coordinatorContentGenDir)) {
+      mounts.push({
+        hostPath: coordinatorContentGenDir,
+        containerPath: '/workspace/agent/content-gen/data',
+        readonly: false,
+      });
+      log.info('Content-gen shared mount added', { group: agentGroup.folder, path: coordinatorContentGenDir });
+    } else {
+      log.warn('Content-gen shared dir not found', { path: coordinatorContentGenDir });
+    }
+  }
+
   return mounts;
 }
 

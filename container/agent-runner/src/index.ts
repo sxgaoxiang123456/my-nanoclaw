@@ -51,7 +51,22 @@ async function main(): Promise<void> {
   // /workspace/agent/CLAUDE.md — the composed entry imports the shared
   // base (/app/CLAUDE.md) and each enabled module's fragment. Per-group
   // memory lives in /workspace/agent/CLAUDE.local.md (auto-loaded).
-  const instructions = buildSystemPromptAddendum(config.assistantName || undefined);
+  let instructions = buildSystemPromptAddendum(config.assistantName || undefined);
+
+  // Also explicitly inject CLAUDE.local.md into the system prompt so it is
+  // always available even when the SDK's auto-load behavior is inconsistent
+  // in headless container mode.
+  const claudeLocalPath = path.join(CWD, 'CLAUDE.local.md');
+  if (fs.existsSync(claudeLocalPath)) {
+    try {
+      const localContent = fs.readFileSync(claudeLocalPath, 'utf-8');
+      if (localContent.trim()) {
+        instructions += '\n\n' + localContent.trim();
+      }
+    } catch {
+      /* ignore read errors */
+    }
+  }
 
   // Discover additional directories mounted at /workspace/extra/*
   const additionalDirectories: string[] = [];

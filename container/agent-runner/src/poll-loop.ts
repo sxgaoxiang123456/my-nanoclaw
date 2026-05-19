@@ -469,14 +469,22 @@ function dispatchResultText(text: string, routing: RoutingContext): void {
   }
 
   if (sent === 0 && text.trim()) {
-    // Single-destination fallback: when the model drops the <message to="…">
+    // Fallback for bare text: when the model drops the <message to="…">
     // wrapping (common after compaction or with short prompts), auto-route
-    // bare text to the only available destination instead of silently dropping.
+    // to the most appropriate destination instead of silently dropping.
     const destinations = getAllDestinations();
     if (destinations.length === 1) {
       const dest = destinations[0];
       log(`Single-destination fallback: wrapping bare text for ${dest.name}`);
       sendToDestination(dest, text.trim(), routing);
+      return;
+    }
+    // Multi-destination fallback: prefer the channel destination that matches
+    // the current inbound message's origin, or any channel destination.
+    const channelDest = destinations.find((d) => d.type === 'channel') || destinations[0];
+    if (channelDest) {
+      log(`Multi-destination fallback: wrapping bare text for ${channelDest.name}`);
+      sendToDestination(channelDest, text.trim(), routing);
       return;
     }
     log(`WARNING: agent output had no <message to="..."> blocks — nothing was sent`);

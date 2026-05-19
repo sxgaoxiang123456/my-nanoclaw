@@ -13,6 +13,9 @@ export type CommandCategory = 'admin' | 'filtered' | 'passthrough' | 'none';
 
 const ADMIN_COMMANDS = new Set(['/remote-control', '/clear', '/compact', '/context', '/cost', '/files']);
 const FILTERED_COMMANDS = new Set(['/help', '/login', '/logout', '/doctor', '/config', '/start']);
+// Content-generation commands are handled by the agent's instructions, not by the SDK natively.
+// They must be formatted as normal messages (XML-wrapped) so the agent can route them.
+const CONTENT_COMMANDS = new Set(['/generate']);
 
 export interface CommandInfo {
   category: CommandCategory;
@@ -50,6 +53,10 @@ export function categorizeMessage(msg: MessageInRow): CommandInfo {
 
   if (FILTERED_COMMANDS.has(command)) {
     return { category: 'filtered', command, text, senderId };
+  }
+
+  if (CONTENT_COMMANDS.has(command)) {
+    return { category: 'none', command, text, senderId };
   }
 
   return { category: 'passthrough', command, text, senderId };

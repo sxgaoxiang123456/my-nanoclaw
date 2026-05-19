@@ -13,7 +13,7 @@ import { getSession } from '../../db/sessions.js';
 import { wakeContainer } from '../../container-runner.js';
 import { initGroupFilesystem } from '../../group-init.js';
 import { log } from '../../log.js';
-import { writeSessionMessage } from '../../session-manager.js';
+import { resolveSession, writeSessionMessage } from '../../session-manager.js';
 import type { AgentGroup, Session } from '../../types.js';
 import { createDestination, getDestinationByName, normalizeName } from './db/agent-destinations.js';
 import { writeDestinations } from './write-destinations.js';
@@ -114,6 +114,22 @@ export async function handleCreateAgent(content: Record<string, unknown>, sessio
   // — forgetting this causes "dropped: unknown destination" when the parent
   // tries to send to the newly-created child.
   writeDestinations(session.agent_group_id, session.id);
+
+  // Create a session for the child agent and wake it so it starts processing
+  // immediately.  The parent's instructions already contain the full context
+  // (topic, taskId, etc.) in the created agent's CLAUDE.local.md, so a
+  // minimal wake message is sufficient.
+  const { session: childSession } = resolveSession(agentGroupId, null, null, 'agent-shared');
+  writeSessionMessage(agentGroupId, childSession.id, {
+    id: `sys-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    kind: 'chat',
+    timestamp: new Date().toISOString(),
+    platformId: sourceGroup.id,
+    channelType: 'agent',
+    threadId: null,
+    content: JSON.stringify({ text: 'Wake up. Your task is described in your instructions.', sender: 'parent', senderId: 'parent' }),
+  });
+  wakeContainer(childSession).catch((err) => log.error('Failed to wake child container', { err }));
 
   // Fire-and-forget notification back to the creator
   notifyAgent(
