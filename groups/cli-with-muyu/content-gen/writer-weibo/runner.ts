@@ -84,6 +84,7 @@ export function saveArticle(taskId: string, article: Omit<PlatformArticle, 'task
     ...existing,
     status: allDone ? 'completed' : existing.status,
     completedAt: allDone ? now : existing.completedAt,
+    totalDurationMs: allDone ? Date.now() - new Date(existing.startedAt).getTime() : existing.totalDurationMs,
     writerStatuses: updatedWriterStatuses,
     results: {
       ...existing.results,

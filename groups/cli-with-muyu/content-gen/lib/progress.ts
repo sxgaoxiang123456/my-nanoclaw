@@ -33,4 +33,4 @@ export async function readProgress(): Promise<ProgressJson | null> {
 }
 
 // Re-export types
-export type { ProgressJson, AgentStatus, PlatformArticle } from './types'
+export type { ProgressJson, AgentExecutionStatus, PlatformArticle } from './types'

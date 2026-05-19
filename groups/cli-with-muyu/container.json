@@ -1,5 +1,14 @@
 {
+  "mcpServers": {},
   "packages": {
-    "npm": ["fast-xml-parser"]
-  }
+    "apt": [],
+    "npm": [
+      "fast-xml-parser"
+    ]
+  },
+  "additionalMounts": [],
+  "skills": "all",
+  "groupName": "Andy",
+  "assistantName": "Andy",
+  "agentGroupId": "ag-1778665742824-uy8fwv"
 }

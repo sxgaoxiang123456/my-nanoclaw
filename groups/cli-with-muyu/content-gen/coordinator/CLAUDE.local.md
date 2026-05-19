@@ -130,21 +130,84 @@ cat /workspace/agent/content-gen/data/progress.json
 写入 `content-gen/data/progress.json`，格式:
 ```json
 {
-  "taskId": "cg-{timestamp}-{seq}",
-  "topic": "...",
+  "taskId": "cg-20260518-001",
+  "topic": "AI 技术趋势",
   "status": "researching|writing|completed|failed",
-  "startedAt": "ISO8601",
-  "agents": {
-    "coordinator": { "status": "running", "stage": "..." },
-    "researcher": { "status": "...", "progress": 0-100 },
-    "writer-xiaohongshu": { "status": "...", "progress": 0-100 },
-    "writer-wechat": { "status": "...", "progress": 0-100 },
-    "writer-weibo": { "status": "...", "progress": 0-100 }
+  "startedAt": "2026-05-18T09:00:00Z",
+  "completedAt": null,
+  "coordinatorStatus": {
+    "agentName": "coordinator",
+    "status": "running",
+    "stage": "调度 Writers"
   },
+  "researcherStatus": {
+    "agentName": "researcher",
+    "status": "completed",
+    "startedAt": "2026-05-18T09:00:05Z",
+    "completedAt": "2026-05-18T09:02:30Z",
+    "progress": 100
+  },
+  "writerStatuses": [
+    {
+      "agentName": "writer-xiaohongshu",
+      "status": "running",
+      "startedAt": "2026-05-18T09:02:35Z",
+      "stage": "撰写正文",
+      "progress": 60
+    },
+    {
+      "agentName": "writer-wechat",
+      "status": "running",
+      "startedAt": "2026-05-18T09:02:35Z",
+      "stage": "生成标题",
+      "progress": 30
+    },
+    {
+      "agentName": "writer-weibo",
+      "status": "queued",
+      "stage": null,
+      "progress": 0
+    }
+  ],
   "results": {
-    "xiaohongshu": { "title": "...", "content": "...", "wordCount": 520 },
-    "wechat": { ... },
-    "weibo": { ... }
+    "xiaohongshu": {
+      "taskId": "cg-20260518-001",
+      "platform": "xiaohongshu",
+      "title": "...",
+      "content": "...",
+      "wordCount": 520
+    },
+    "wechat": null,
+    "weibo": null
   }
 }
 ```
+
+**字段说明：**
+
+- `taskId` — 任务唯一标识
+- `topic` — 用户输入的主题
+- `status` — 整体任务状态：`researching` | `writing` | `completed` | `failed`
+- `startedAt` / `completedAt` — 任务开始/完成时间（ISO8601）
+- `coordinatorStatus` — Coordinator Agent 执行状态（`AgentExecutionStatus`）
+- `researcherStatus` — Researcher Agent 执行状态（`AgentExecutionStatus`）
+- `writerStatuses` — Writer Agent 执行状态数组，每个元素为 `AgentExecutionStatus`
+- `results` — 各平台生成的文章结果，key 为平台名，值为 `PlatformArticle` 或 `null`
+
+**AgentExecutionStatus 字段：**
+- `agentName`: string — Agent 名称
+- `status`: `'queued' | 'running' | 'completed' | 'failed'`
+- `stage`: string — 当前阶段描述
+- `progress`: number (0-100) — 进度百分比
+- `startedAt`: ISO8601 — 开始时间
+- `completedAt`: ISO8601 — 完成时间
+- `error`: string — 错误信息（失败时）
+
+**PlatformArticle 字段：**
+- `taskId`: string — 关联的任务 ID
+- `platform`: `'xiaohongshu' | 'wechat' | 'weibo'` — 目标平台
+- `title`: string — 文章标题
+- `content`: string — 文章内容
+- `wordCount`: number — 字数
+- `durationMs`: number — 生成耗时（毫秒）
+- `styleGuide`: string — 使用的风格指南

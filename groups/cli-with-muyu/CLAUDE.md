@@ -1,2 +1,9 @@
-@./.claude-fragments/module-daily-digest.md
-@./.claude-fragments/module-content-gen.md
+<!-- Composed at spawn — do not edit. Edit CLAUDE.local.md for per-group content. -->
+@./.claude-shared.md
+@./.claude-fragments/module-agents.md
+@./.claude-fragments/module-core.md
+@./.claude-fragments/module-interactive.md
+@./.claude-fragments/module-scheduling.md
+@./.claude-fragments/module-self-mod.md
+@./.claude-fragments/skill-daily-digest.md
+@./.claude-fragments/skill-onecli-gateway.md
